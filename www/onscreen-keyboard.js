@@ -290,30 +290,8 @@ class OnScreenKeyboard extends HTMLElement {
 
 customElements.define('onscreen-keyboard', OnScreenKeyboard);
 
-// Lovelace custom card wrapper
-class OnScreenKeyboardCard extends HTMLElement {
-  setConfig(config) {
-    if (this._keyboard) {
-      this._keyboard.setConfig(config);
-      return;
-    }
-    this.innerHTML = '';
-    this._keyboard = document.createElement('onscreen-keyboard');
-    this._keyboard.setConfig(config);
-    this.appendChild(this._keyboard);
-  }
-
-  getCardSize() {
-    return 1;
-  }
+// Auto-inject the keyboard overlay if not already present
+if (!document.querySelector('onscreen-keyboard')) {
+  const kb = document.createElement('onscreen-keyboard');
+  document.body.appendChild(kb);
 }
-
-customElements.define('onscreen-keyboard-card', OnScreenKeyboardCard);
-
-// For Lovelace: register as custom:onscreen-keyboard
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: 'onscreen-keyboard',
-  name: 'On‑Screen Keyboard',
-  description: 'A smooth, animated on‑screen keyboard for Home Assistant dashboards'
-});
