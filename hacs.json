@@ -2,7 +2,7 @@
   "name": "Onscreen Dashboard Keyboard",
   "content_in_root": false,
   "filename": "onscreen-keyboard.js",
-  "type": "dashboard",
+  "type": "template",
   "render_readme": true,
   "description": "A customizable onscreen keyboard template for Home Assistant dashboards."
 } 
