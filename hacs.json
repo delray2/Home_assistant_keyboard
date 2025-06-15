@@ -1,0 +1,8 @@
+{
+  "name": "Onscreen Dashboard Keyboard",
+  "content_in_root": false,
+  "filename": "www/onscreen-keyboard.js",
+  "type": "lovelace",
+  "render_readme": true,
+  "description": "A customizable onscreen keyboard template for Home Assistant dashboards."
+} 
