@@ -7,7 +7,7 @@ A customizable onscreen keyboard template for Home Assistant dashboards. Easily 
 ### HACS (Recommended)
 1. Go to HACS in your Home Assistant sidebar.
 2. Click on "Custom repositories" (three dots in the top right).
-3. Add this repository URL as a **Lovelace** repository.
+3. Add this repository URL as a repository.
 4. Search for "Onscreen Dashboard Keyboard" in HACS and install.
 5. After installation, reload your browser.
 
