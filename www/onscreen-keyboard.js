@@ -2,6 +2,8 @@ class OnScreenKeyboard extends HTMLElement {
   constructor() {
     super();
 
+    console.log('OnScreenKeyboard: Initialized.');
+
     /* Shadow DOM & default state */
     this.attachShadow({ mode: 'open' });
     this._config = {
@@ -171,7 +173,11 @@ class OnScreenKeyboard extends HTMLElement {
   _setupEventListeners() {
     this._eventsAttached = true;
 
+    console.log('OnScreenKeyboard: Attaching event listeners.');
+    // Listen on the document for focus events. `focusin` bubbles up through shadow DOMs.
     document.addEventListener('focusin',   this._onFocusIn);
+    
+    // Listen for mousedown to handle hiding the keyboard when clicking outside.
     document.addEventListener('mousedown', this._onDocMouseDown);
 
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -184,15 +190,29 @@ class OnScreenKeyboard extends HTMLElement {
   }
 
   _onFocusIn(e) {
-    if (['INPUT','TEXTAREA'].includes(e.target.tagName)) {
-      this._currentInput = e.target;
+    // Use composedPath() to get the actual target element, even if it's inside a shadow DOM.
+    const target = e.composedPath()[0];
+    console.log('OnScreenKeyboard: "focusin" event detected. Target:', target);
+
+    if (target && ['INPUT','TEXTAREA'].includes(target.tagName) && !target.readOnly) {
+      console.log('OnScreenKeyboard: Valid input focused. Showing keyboard.');
+      this._currentInput = target;
       this._showKeyboard();
+    } else {
+      if (!target) {
+        console.log('OnScreenKeyboard: Event target not found.');
+      } else if (!['INPUT','TEXTAREA'].includes(target.tagName)) {
+        console.log(`OnScreenKeyboard: Target is not an INPUT or TEXTAREA. Tag name is: "${target.tagName}".`);
+      } else if (target.readOnly) {
+        console.log('OnScreenKeyboard: Target is read-only.');
+      }
     }
   }
 
   _onDocMouseDown(e) {
     const path = e.composedPath();
-    if (this._keyboardVisible && !path.includes(this.shadowRoot) && !path.includes(this._currentInput)) {
+    // Hide keyboard if click is outside the keyboard and the currently focused input.
+    if (this._keyboardVisible && !path.includes(this) && !path.includes(this._currentInput)) {
       this._hideKeyboard();
     }
   }
@@ -261,12 +281,14 @@ class OnScreenKeyboard extends HTMLElement {
   /* ───────────────────────── VISIBILITY ───────────────────────── */
   _showKeyboard() {
     const kb = this.shadowRoot.querySelector('.keyboard');
+    console.log('OnScreenKeyboard: _showKeyboard() called.');
     if (kb) kb.classList.add('visible');
     this._keyboardVisible = true;
   }
 
   _hideKeyboard() {
     const kb = this.shadowRoot.querySelector('.keyboard');
+    console.log('OnScreenKeyboard: _hideKeyboard() called.');
     if (kb) kb.classList.remove('visible');
     this._keyboardVisible = false;
     this._currentInput = null;
